@@ -50,7 +50,8 @@ Route::get('ward/{districtId}', [UserAddressController::class, 'getWard']);
 Route::group(['middleware' => ['auth:sanctum']], function (){
 
     /*CheckToken Route*/
-    Route::post('/check-token', [AuthController::class, 'checkToken']);
+    Route::post('/check-token', [AuthController::class, 'checkTokenLogin']);
+    Route::post('/check-remember', [AuthController::class, 'checkRememberLogin']);
 
     /*Authenticate Route*/
     Route::post('logout', [AuthController::class, 'logout']);

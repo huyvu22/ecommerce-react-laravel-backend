@@ -47,6 +47,12 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+        if($request->remember_token) {
+            $user->remember_token = $request->remember_token;
+            $user->save();
+        }
+
+
         return $this->success([
             'user' => $user,
             'token' => $user->createToken('Api Token of '.$user->name)->plainTextToken,
@@ -83,7 +89,7 @@ class AuthController extends Controller
     }
 
 
-    public function checkToken(Request $request)
+    public function checkTokenLogin(Request $request)
     {
         $user = Auth::user();
 
@@ -92,6 +98,21 @@ class AuthController extends Controller
         } else {
             return response()->json(['valid' => false], 401);
         }
+    }
+
+    public function checkRememberLogin(Request $request)
+    {
+       $rememberToken = $request->remember_token;
+       if($rememberToken){
+           $found = User::where('remember_token',$rememberToken)->first();
+           if ($found) {
+               return response()->json(['valid' => true], 200);
+           } else {
+               return response()->json(['valid' => false], 401);
+           }
+       }
+
+
     }
 
     public function changePassword(Request $request)
