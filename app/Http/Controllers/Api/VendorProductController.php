@@ -70,7 +70,6 @@ class VendorProductController extends Controller
             $imagePath= $this->uploadImage( $request, 'image','uploads');
         }
 
-
         $productData = [
             'thumb_image' => $imagePath ?? $foundProduct->thumb_image,
             'name' => $request->name,

@@ -23,4 +23,7 @@ class ProductReview extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    public function productReviewGalleries(){
+        return $this->hasMany(ProductReviewGallery::class);
+    }
 }
