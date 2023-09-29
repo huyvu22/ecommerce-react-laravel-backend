@@ -77,7 +77,7 @@
                 </ul>
             </li>
 
-            <li class="dropdown {{setActive(['admin.slider.*','admin.homepage.*','admin.vendor-condition.*','admin.about.*','admin.terms-and-condition.*','admin.advertisement.*','admin.faqs.*'])}}">
+            <li class="dropdown {{setActive(['admin.slider.*','admin.homepage.*','admin.vendor-condition.*','admin.about.*','admin.terms-and-condition.*','admin.advertisement.*','admin.faqs.*', 'admin.policy.*'])}}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-cog"></i> <span>Manage Website</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{setActive(['admin.slider.*'])}}"><a class="nav-link" href="{{route('admin.slider.index')}}">Slider</a></li>
@@ -86,6 +86,7 @@
                     <li class="{{setActive(['admin.advertisement.*'])}}"><a class="nav-link" href="">Advertisement</a></li>
                     <li class="{{setActive(['admin.about.*'])}}"><a class="nav-link" href="{{route('admin.about.index')}}">About Us</a></li>
                     <li class="{{setActive(['admin.terms-and-condition.*'])}}"><a class="nav-link" href="{{route('admin.terms-and-condition.index')}}">Terms and conditions</a></li>
+                    <li class="{{setActive(['admin.policy.*'])}}"><a class="nav-link" href="{{route('admin.policy.index')}}">Privacy Policy</a></li>
                     <li class="{{setActive(['admin.faqs.*'])}}"><a class="nav-link" href="{{route('admin.faqs.index')}}">FAQ</a></li>
                 </ul>
             </li>

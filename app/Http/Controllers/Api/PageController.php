@@ -7,6 +7,8 @@ use App\Mail\Contact;
 use App\Models\About;
 use App\Models\EmailConfig;
 use App\Models\FAQ;
+use App\Models\GeneralSetting;
+use App\Models\PrivacyPolicy;
 use App\Models\TermsAndCondition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -24,6 +26,18 @@ class PageController extends Controller
     {
         $termsAndCondition = TermsAndCondition::first();
         return $this->success($termsAndCondition);
+    }
+
+    public function privacyPolicy()
+    {
+        $policy = PrivacyPolicy::first();
+        return $this->success($policy);
+    }
+
+    public function contact()
+    {
+        $contact = GeneralSetting::first();
+        return  $this->success($contact);
     }
 
 

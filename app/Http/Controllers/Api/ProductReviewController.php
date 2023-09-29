@@ -16,7 +16,7 @@ class ProductReviewController extends Controller
     use \App\Traits\ImageUploadTrait;
     public function showReview($productId)
     {
-        $reviews = ProductReview::where('product_id', $productId)->paginate(5);
+        $reviews = ProductReview::where(['product_id'=> $productId, 'status' => 1])->paginate(5);
         return ProductReviewResource::collection($reviews);
     }
 
@@ -38,14 +38,16 @@ class ProductReviewController extends Controller
         $review->vendor_id = $vendor->id;
         $review->rating = $request->rating;
         $review->review = $request->review;
-        $review->status = 0;
+        $review->status = 1;
         $review->save();
 
-        foreach ( $imagePathArr as $imagePath) {
-            $review_gallery = new ProductReviewGallery();
-            $review_gallery->product_review_id = $review->id;
-            $review_gallery->image = $imagePath;
-            $review_gallery->save();
+        if($imagePathArr){
+            foreach ( $imagePathArr as $imagePath) {
+                $review_gallery = new ProductReviewGallery();
+                $review_gallery->product_review_id = $review->id;
+                $review_gallery->image = $imagePath;
+                $review_gallery->save();
+            }
         }
 
         return $this->success('', 'Thank you for reviewing !');

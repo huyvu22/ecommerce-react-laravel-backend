@@ -24,7 +24,7 @@ class OrderResource extends JsonResource
             'shipping_method'=>$this->shipping_method,
             'order_address'=>$this->order_address,
             'created_at' => $this->created_at,
-            'order_product' => $this->orderProducts->map(function ($item) {
+            'order_product' => @$this->orderProducts->map(function ($item) {
                 return [
                     'product_id' => (string)$item->id,
                     'product_image' => $item->product->thumb_image,

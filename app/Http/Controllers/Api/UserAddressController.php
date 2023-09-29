@@ -20,11 +20,7 @@ class UserAddressController extends Controller
     public function index()
     {
         $userAddress = UserAddress::where('user_id',Auth::user()->id)->get();
-        if($userAddress->count() <= 0) {
-            $userAddress = User::where('id', Auth::user()->id)->get();
-        }
-        return response()->json($userAddress);
-
+        return $this->success($userAddress);
     }
 
     /**

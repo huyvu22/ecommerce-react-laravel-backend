@@ -7,6 +7,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -157,6 +158,16 @@ class ProductController extends Controller
 //        ];
 //
 //        return ProductResource::collection($data);
+    }
+
+    public function vendorProducts($id)
+    {
+        $vendor = Vendor::find($id);
+        $products = Product::where([
+            'status' => 1,
+            'vendor_id' => $vendor->id
+        ])->paginate(9);
+        return ProductResource::collection($products);
     }
 
     public function searchProduct($keyword)

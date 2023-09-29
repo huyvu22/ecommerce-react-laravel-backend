@@ -56,7 +56,7 @@ class PaymentController extends Controller
             $orderProduct->product_name = $product->name;
             $orderProduct->variants = null;
             $orderProduct->variant_total = null;
-            $orderProduct->unit_price = $item['price'];
+            $orderProduct->unit_price = $item['offer_price'];
             $orderProduct->quantity = $item['quantity'];
             $orderProduct->save();
 
@@ -76,11 +76,11 @@ class PaymentController extends Controller
         $transaction->save();
 
         //Update Coupon quantity
-//        if($coupon !== null){
+        if($coupon !== null){
             $coupon = Coupon::first();
             $coupon->total_used = (int)$coupon->total_used + 1;
             $coupon->save();
-//        }
+        }
     }
 
     /* Pay with PayPal*/
@@ -125,7 +125,7 @@ class PaymentController extends Controller
         $response = $provider->createOrder([
             "intent" => "CAPTURE",
             "application_context" => [
-                "return_url" => ('http://localhost:3000/payment/success'),
+                "return_url" => ('http://localhost:3000/payment/paypal/success'),
                 "cancel_url" => ('http://localhost:3000/payment/cancel')
             ],
             "purchase_units" => [
@@ -179,13 +179,93 @@ class PaymentController extends Controller
     /* Pay with COD*/
     public function payWithCod(Request $request)
     {
-//        $codSetting = CodSetting::first();
-//        if ($codSetting->status == 0){
-//            toastr('Vui lòng thử lại sau, xin cảm ơn!', 'error');
-//            return redirect()->back();
-//        }
-
         return $this->success('', 'Order Successfully!', );
+    }
+
+    /* Pay with VnPay*/
+    public function connectVnPayPayment(Request $request)
+    {
+        error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $totalPay = $request->total;
+
+        $vnp_TmnCode = "BZU9ONFY";
+        $vnp_HashSecret = "MCXMMMPVHKTACIAGMMBQDNQRCGUKRBYK";
+        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        $vnp_Returnurl = 'http://localhost:3000/payment/vnpay/success';
+        $startTime = date("YmdHis");
+        $expire = date('YmdHis', strtotime('+15 minutes', strtotime($startTime)));
+        $vnp_TxnRef = rand(1,10000); // order_id
+        $vnp_Amount = $totalPay; // Số tiền thanh toán
+        $vnp_Locale = 'vn'; //Ngôn ngữ chuyển hướng thanh toán
+        $vnp_IpAddr = $_SERVER['REMOTE_ADDR']; //IP Khách hàng thanh toán
+
+        $inputData = array(
+            "vnp_Version" => "2.1.0",
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_Amount" => $vnp_Amount * 100,
+            "vnp_Command" => "pay",
+            "vnp_CreateDate" => date('YmdHis'),
+            "vnp_CurrCode" => "VND",
+            "vnp_IpAddr" => $vnp_IpAddr,
+            "vnp_Locale" => $vnp_Locale,
+            "vnp_OrderInfo" => "Thanh toan GD tren Ecommerce",
+            "vnp_OrderType" => "other",
+            "vnp_ReturnUrl" => $vnp_Returnurl,
+            "vnp_TxnRef" => $vnp_TxnRef,
+            "vnp_ExpireDate" => $expire,
+            'vnp_BankCode' => 'ncb'
+        );
+
+        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
+            $inputData['vnp_BankCode'] = $vnp_BankCode;
+        }
+
+        ksort($inputData);
+        $query = "";
+        $i = 0;
+        $hashdata = "";
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashdata .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+            $query .= urlencode($key) . "=" . urlencode($value) . '&';
+        }
+
+        $vnp_Url = $vnp_Url . "?" . $query;
+        if (isset($vnp_HashSecret)) {
+            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
+            $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+        }
+
+        $returnData = array(
+            'code' => '00', 'message' => 'success', 'data' => $vnp_Url
+        );
+
+        if (isset($_POST['redirect'])) {
+            header('Location: ' . $vnp_Url);
+            die();
+        } else {
+            echo json_encode($returnData);
+        }
+    }
+
+    public function vnPayCheck(Request $request)
+    {
+        $vnp_ResponseCode = $request->vnp_ResponseCode;
+
+        if(!empty($vnp_ResponseCode)){
+            if($vnp_ResponseCode == '00'){
+                return $request->all();
+            }elseif ($payment_id === '2'){
+                $data_url = $this->connectVnPayPayment();
+                return redirect()->to($data_url);
+            }
+        }
     }
 
     public function getCartList(Request $request)

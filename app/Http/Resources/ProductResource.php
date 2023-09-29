@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class ProductResource extends JsonResource
 {
@@ -19,14 +20,18 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'thumb_image' => $this->thumb_image,
-            'vendor' => $this->vendor->shop_name,
+            'vendor' => [
+               'id'=> $this->vendor->id,
+               'name'=> $this->vendor->shop_name,
+               'slug'=> Str::slug($this->vendor->shop_name),
+            ],
             'availability' => $this->quantity,
             'short_description' => $this->short_description,
             'full_description' => $this->full_description,
             'sku' => $this->sku,
             'price' => $this->price,
             'offer_price' => $this->offer_price,
-            'product_type' => $this->product_type,
+            'product_type' => ($this->product_type === 'best_product' ? 'sale' : (($this->product_type === 'new_arrival' ? 'new' : 'featured'))),
             'status' => $this->status,
             'rating' =>  $this->reviews->average('rating'),
             'category' =>[

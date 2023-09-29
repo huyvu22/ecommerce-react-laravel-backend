@@ -3,7 +3,7 @@
     <!-- Main Content -->
     <section class="section">
         <div class="section-header">
-            <h1>About</h1>
+            <h1>Privacy Policy</h1>
         </div>
 
         <div class="section-body">
@@ -12,12 +12,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>About us</h4>
+                            <h4>Privacy Policy</h4>
                         </div>
                         <div class="card-body">
-                            <form action="{{route('admin.about.update')}}" method="post">
+                            <form action="{{route('admin.policy.update')}}" method="post">
                                 @csrf
-								@method('put')
+                                @method('put')
                                 <div class="form-group">
                                     <label for="">Content</label>
                                     <textarea id="" name="content" class="summernote">{!! @$content->content !!}</textarea>

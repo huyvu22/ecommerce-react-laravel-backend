@@ -13,9 +13,12 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductReviewController;
 use App\Http\Controllers\Api\ShippingFeeController;
 use App\Http\Controllers\Api\SliderController;
+use App\Http\Controllers\Api\SocialiteLoginController;
 use App\Http\Controllers\Api\UserAddressController;
+use App\Http\Controllers\Api\VendorAddressController;
 use App\Http\Controllers\Api\VendorOrderedProductController;
 use App\Http\Controllers\Api\VendorProductController;
+use App\Http\Controllers\Api\WishListController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,12 +42,16 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('forgot', [AuthController::class, 'forgot']);
 
+//Login with Google
+Route::get('login/google', [SocialiteLoginController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [SocialiteLoginController::class, 'handleGoogleCallback']);
+
 Route::post('seller/register', [AuthVendorController::class, 'register']);
 
 Route::get('province', [UserAddressController::class, 'getProvince']);
 Route::get('district/{provinceId}', [UserAddressController::class, 'getDistrict']);
 Route::get('ward/{districtId}', [UserAddressController::class, 'getWard']);
-//Route::resource( 'address',UserAddressController::class);
+
 
 //Protected Route
 Route::group(['middleware' => ['auth:sanctum']], function (){
@@ -59,6 +66,7 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
 
    /*Address Route*/
     Route::resource( 'address',UserAddressController::class);
+    Route::resource( 'seller/address',VendorAddressController::class);
 
     Route::post( 'shipping-fee',[ShippingFeeController::class, 'shippingFee']);
 
@@ -71,6 +79,10 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::get('paypal/success',[PaymentController::class,'paypalPaymentSuccess']);
     Route::get('paypal/cancel',[PaymentController::class,'paypalPaymentCancel']);
     Route::post('cart-list',[PaymentController::class,'getCartList']);
+
+    /*VnPay Route*/
+    Route::post('vnpay/payment',[PaymentController::class,'connectVnPayPayment']);
+    Route::get('vnpay/checkout',[PaymentController::class,'vnPayCheck']);
 
     /*COD Route*/
     Route::get('cod/payment',[PaymentController::class,'payWithCod']);
@@ -97,6 +109,9 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     /*Product Review Route*/
     Route::get('product-review/{productId}',[ProductReviewController::class, 'showReview']);
     Route::post('product-review',[ProductReviewController::class, 'store']);
+
+    /*WishList Route*/
+    Route::resource( 'wishlist',WishListController::class);
 });
 
 
@@ -106,7 +121,8 @@ Route::get('/coupon/{code}', [CouponController::class,'applyCoupon']);
 
 
 Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'products']);
+//    Route::get('/', [ProductController::class, 'products']);
+    Route::get('/vendor-products/{id}', [ProductController::class,'vendorProducts']);
     Route::get('/search/{keyword}', [ProductController::class, 'searchProduct']);
     Route::get('/product-type/{type}', [ProductController::class, 'productType']);
     Route::get('/category/{slug}', [ProductController::class, 'productsByCategory']);
@@ -117,11 +133,14 @@ Route::prefix('products')->group(function () {
 
 /*Route Newsletter*/
 Route::post('newsletter',[NewsletterController::class, 'newsLetter']);
+Route::get('newsletter-verify/{token}',[NewsletterController::class, 'newsLetterEmailVerify'])->name('newsletter-verify');
 
 /*Route specific Page*/
-Route::get('about',[PageController::class, 'about']);
+Route::get('about-us',[PageController::class, 'about']);
 Route::get('terms-and-condition',[PageController::class, 'termsAndCondition']);
-//Route::get('contact',[PageController::class, 'contact']);
-Route::post('contact',[PageController::class, 'postContactForm']);
+Route::get('privacy-policy',[PageController::class, 'privacyPolicy']);
+
+Route::get('contact',[PageController::class, 'contact']);
+Route::post('send-contact',[PageController::class, 'postContactForm']);
 Route::get('faqs',[PageController::class, 'faqs']);
 

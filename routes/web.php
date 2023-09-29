@@ -18,6 +18,7 @@ use App\Http\Controllers\Backend\ManageUserController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\PaymentSettingController;
 use App\Http\Controllers\Backend\PaypalSettingController;
+use App\Http\Controllers\Backend\PrivacyPolicyController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\SettingController;
@@ -143,6 +144,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('terms-and-condition',[TermsAndConditionController::class,'index'])->name('terms-and-condition.index');
     Route::put('terms-and-condition',[TermsAndConditionController::class,'update'])->name('terms-and-condition.update');
 
+    /* Policy us Route*/
+    Route::get('policy',[PrivacyPolicyController::class,'index'])->name('policy.index');
+    Route::put('policy',[PrivacyPolicyController::class,'update'])->name('policy.update');
+
     /* Review Route*/
     Route::get('review',[AdminReviewController::class,'index'])->name('review.index');
     Route::get('review/update-approved/{productId}/{approved}', [AdminReviewController::class,'updateApprove'])->name('review.updateApprove');
@@ -163,8 +168,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('footer-column-3/change-title',[FooterColumnThreeController::class,'changeTitle'])->name('footer-column-3.change-title');
     Route::resource('footer-column-3',FooterColumnThreeController::class);
 
-    /*Route Newsletter*/
-    Route::get('newsletter-verify/{token}',[NewsletterController::class, 'newsLetterEmailVerify'])->name('newsletter-verify');
+//    /*Route Newsletter*/
+//    Route::get('newsletter-verify/{token}',[NewsletterController::class, 'newsLetterEmailVerify'])->name('newsletter-verify');
 
     /* Customer list Route*/
     Route::get('customers',[CustomerListController::class,'index'])->name('customers.index');
