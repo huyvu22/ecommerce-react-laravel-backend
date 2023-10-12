@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,6 +19,7 @@ class OrderResource extends JsonResource
             'invoice' => $this->invoice_id,
             'sub_total' => $this->sub_total,
             'amount' => $this->amount,
+//            'discount' => Coupon::where('code', $this->coupon)->first()->discount_value,
             'payment_method' => $this->payment_method,
             'payment_status'=>$this->payment_status,
             'order_status'=>$this->order_status,

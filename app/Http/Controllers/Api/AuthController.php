@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Mail\ForgotPassword;
 use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,13 +20,33 @@ class AuthController extends Controller
 
     public function register(StoreUserRequest $request)
     {
-        $request->validated($request->all());
+//        $request->validated($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error('', $validator->messages(), 422);
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'user'
         ]);
+
+        UserAddress::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+            ]
+        );
 
         return $this->success([
             'user' => $user,
@@ -73,7 +94,6 @@ class AuthController extends Controller
             $user->password = Hash::make($password);
             $user->save();
 
-            // Send the email with the new password
             Mail::to($request->email)->send(new ForgotPassword($user->name,$request->email, $password));
             return $this->success('', 'Password reset successful. Check your email for the new password.');
         } else {

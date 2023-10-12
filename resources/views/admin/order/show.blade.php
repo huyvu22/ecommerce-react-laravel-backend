@@ -1,5 +1,9 @@
 @php
-    use Carbon\Carbon;$address = json_decode($order->order_address);
+    use Carbon\Carbon;
+    $address = json_decode($order->order_address);
+    $province = json_decode($address->province)->label;
+    $ward = json_decode($address->ward)->label;
+    $district = json_decode($address->district)->label;
     $shipping = json_decode($order->shipping_method);
     $coupon = json_decode($order->coupon);
 @endphp
@@ -30,7 +34,7 @@
                                         <b>Name</b>: {{$address->name}}<br>
                                         <b>Email</b>: {{$address->email}}<br>
                                         <b>Phone</b>: {{$address->phone}}<br>
-                                        <b>Address</b>: {{$address->address}}, {{$address->ward}}, {{$address->district}}, {{$address->province}}<br>
+                                        <b>Address</b>: {{$address->address}}, {{$ward}}, {{$district}}, {{$province}}.<br>
                                     </address>
                                 </div>
                                 <div class="col-md-6 text-md-right">
@@ -39,7 +43,7 @@
                                         <b>Name</b>: {{$address->name}}<br>
                                         <b>Email</b>: {{$address->email}}<br>
                                         <b>Phone</b>: {{$address->phone}}<br>
-                                        <b>Address</b>: {{$address->address}}, {{$address->ward}}, {{$address->district}}, {{$address->province}}<br>
+                                        <b>Address</b>: {{$address->address}}, {{$ward}}, {{$district}}, {{$province}}.<br>
                                     </address>
                                 </div>
                             </div>
@@ -68,22 +72,22 @@
                             <p class="section-lead">All items here cannot be deleted.</p>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover table-md">
-                                    <tr>
+                                    <tr class="text-center">
                                         <th data-width="40">#</th>
-                                        <th class="text-center">Vendor</th>
+                                        <th>Vendor</th>
                                         <th>Item</th>
                                         <th>Variant</th>
-                                        <th class="text-center">Price</th>
-                                        <th class="text-center">Quantity</th>
-                                        <th class="text-right">Totals</th>
+                                        <td>Price</td>
+                                        <td>Quantity</td>
+                                        <th>Totals</th>
                                     </tr>
                                     @foreach($order->orderProducts as $product)
                                       @php
                                           $variants = json_decode($product->variants);
                                       @endphp
-                                        <tr>
+                                        <tr class="text-center">
                                             <td>{{$loop->index+1}}</td>
-                                            <td class="text-center">{{$product->vendor->shop_name}}</td>
+                                            <td>{{$product->vendor->shop_name}}</td>
                                             @if(isset($product->product->slug))
                                                 <td><a target="_blank" href="">{{$product->product_name}}</a></td>
                                             @else
@@ -91,13 +95,17 @@
                                             @endif
 
                                             <td>
-{{--                                                @foreach($variants as $key=>$variant)--}}
-{{--                                                    - <b>{{$key}}: </b>{{$variant->name}}--}}
-{{--                                                @endforeach--}}
+                                                @if($variants)
+                                                    @foreach($variants as $key=>$variant)
+                                                        - <b>{{$key}}: </b>{{$variant->name}}
+                                                    @endforeach
+                                                @else
+                                                    -
+                                                @endif
                                             </td>
-                                            <td class="text-center">{{$product->unit_price}}</td>
-                                            <td class="text-center">{{$product->quantity}}</td>
-                                            <td class="text-right">{{($product->unit_price * $product->quantity) + $product->variant_total}}</td>
+                                            <td>{{$product->unit_price}}$</td>
+                                            <td>{{$product->quantity}}</td>
+                                            <td>{{format(($product->unit_price * $product->quantity) + $product->variant_total)}}</td>
                                         </tr>
                                     @endforeach
 
@@ -127,20 +135,20 @@
                                 <div class="col-lg-4 text-right">
                                     <div class="invoice-detail-item">
                                         <div class="invoice-detail-name">Subtotal</div>
-                                        <div class="invoice-detail-value">{{$order->sub_total}}</div>
+                                        <div class="invoice-detail-value">{{format($order->sub_total)}}$</div>
                                     </div>
                                     <div class="invoice-detail-item">
                                         <div class="invoice-detail-name">Shipping</div>
-                                        <div class="invoice-detail-value">{{@$shipping->cost}}</div>
+                                        <div class="invoice-detail-value">{{@$shipping->cost ? $shipping->cost : 0}}</div>
                                     </div>
                                     <div class="invoice-detail-item">
                                         <div class="invoice-detail-name">Coupon</div>
-                                        <div class="invoice-detail-value">{{$coupon == null ? 0 : $coupon->discount}}</div>
+                                        <div class="invoice-detail-value">{{@$discountValue == null ? 0 :format($discountValue)}}</div>
                                     </div>
                                     <hr class="mt-2 mb-2">
                                     <div class="invoice-detail-item">
                                         <div class="invoice-detail-name">Total</div>
-                                        <div class="invoice-detail-value invoice-detail-value-lg">{{$order->amount}}</div>
+                                        <div class="invoice-detail-value invoice-detail-value-lg">{{format($order->amount)}}</div>
                                     </div>
                                 </div>
                             </div>

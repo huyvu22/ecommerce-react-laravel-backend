@@ -15,7 +15,6 @@ function isRole($dataArr,$moduleName,$role='view')
     return false;
 }
 
-
 function setActive($routes){
     if(is_array($routes)){
         foreach($routes as $route){
@@ -36,30 +35,12 @@ function checkDiscount($product){
 }
 
 function format($price){
-    return  number_format($price, 0, ',', '.').'$';
+    return  '$'.number_format($price, 2, ',', '.');
 }
-function formatRangePrice($price){
-    return  number_format($price, 0, ',', '.');
-}
-
-function reverseFormatNumber($number) {
-    // Remove all periods from the number string
-    return str_replace('.', '', $number);
-}
-
 
 function discountPercent($originalPrice, $currentPrice){
     $discountPrice = $originalPrice - $currentPrice;
     return round($discountPrice/$originalPrice,2) * 100;
-}
-
-function productType($type){
-    return match ($type) {
-        'new_arrival' => 'New',
-        'best_product' => 'Best',
-        'top_product' => 'Top',
-        default => 'Featured',
-    };
 }
 
 function getCartTotalRaw()
@@ -118,28 +99,6 @@ function getMainCartTotalRaw(){
 }
 
 
-function getCartDiscount(){
-    if(\Session::has('coupon')){
-        $coupon = \Session::get('coupon');
-        if($coupon['discount_type'] == 'amount'){
-            return format($coupon['discount']);
-        }else if($coupon['discount_type'] == 'percent'){
-            return '-'.format(getCartTotalRaw() - ($coupon['discount']/100 *getCartTotalRaw()));
-        }
-    }else{
-        return '0₫';
-    }
-}
-
-
-function getShippingFee(){
-    if(\Session::has('shipping_method')){
-        return format(Session::get('shipping_method')['cost']);
-    }else{
-        return '0₫';
-    }
-}
-
 function getShippingFeeRaw(){
     if(\Session::has('shipping_method')){
         return (Session::get('shipping_method')['cost']);
@@ -158,13 +117,7 @@ function getPayAmount(){
 }
 
 function limitText($text, $limit = 20){
-    return Str::limit($text, $limit);
-}
-function checkInStock($product){
-    if($product->quantity > 0){
-        return true;
-    }
-    return false;
+    return \Str::limit($text, $limit);
 }
 
 

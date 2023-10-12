@@ -43,8 +43,6 @@ class PendingOrderDataTable extends DataTable
             })
 
             ->addColumn('order_status', function ($query){
-//                return '<span class="badge badge-info">'.$query->order_status.'</span>';
-
                 if($query->order_status == 1){
                     return '<span class="badge badge-success">Complete</span>';
                 }else{
@@ -57,6 +55,9 @@ class PendingOrderDataTable extends DataTable
                 }else{
                     return '<span class="badge badge-danger">Pending</span>';
                 }
+            })
+            ->addColumn('amount', function ($query){
+                return format($query->amount);
             })
             ->rawColumns(['order_status', 'action','payment_status'])
             ->setRowId('id');
@@ -102,7 +103,7 @@ class PendingOrderDataTable extends DataTable
             Column::make('invoice_id'),
             Column::make('customer'),
             Column::make('date'),
-            Column::make('product_quantity'),
+            Column::make('product_quantity')->addClass('text-center'),
             Column::make('amount'),
             Column::make('order_status'),
             Column::make('payment_status'),

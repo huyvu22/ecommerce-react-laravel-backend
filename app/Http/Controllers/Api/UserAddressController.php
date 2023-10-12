@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DistrictResource;
 use App\Http\Resources\ProvinceResource;
-use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +18,8 @@ class UserAddressController extends Controller
      */
     public function index()
     {
-        $userAddress = UserAddress::where('user_id',Auth::user()->id)->get();
-        return $this->success($userAddress);
+        $userInfo = UserAddress::where('user_id',Auth::user()->id)->get();
+        return $this->success($userInfo);
     }
 
     /**

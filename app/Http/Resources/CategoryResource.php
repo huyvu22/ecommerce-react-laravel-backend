@@ -15,14 +15,15 @@ class CategoryResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => (string)$this->id,
+
             'category' => [
+                'id' => $this->id,
                 'name' => $this->name,
                 'slug' => $this->slug,
             ],
             'subCategory' => $this->subCategories->map(function ($subCategory) {
                 return [
-                    'id' => (string)$subCategory->id,
+                    'id' => $subCategory->id,
                     'name' => $subCategory->name,
                     'slug' => $subCategory->slug,
                 ];

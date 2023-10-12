@@ -55,6 +55,24 @@
             });
         }
 
+        /* Handle Toggle Approved */
+        if(document.querySelector('.data-table')){
+            document.querySelector('.data-table').addEventListener('change', async (e) => {
+                if (e.target.classList.contains('is_approved')) {
+                    e.preventDefault();
+                    const productId = e.target.dataset.productId;
+                    const selectedValue = e.target.value;
+                    const endpoint = `./vendor-pending-products/update-approved/${productId}/${selectedValue}`;
+                    const res = await fetch(endpoint);
+                    const data = await res.json();
+                    if(data.status==200){
+                        // toastr.success(data.message);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
         /* Handle Toggle Status */
         if ( document.querySelector('.data-table')){
             document.querySelector('.data-table').addEventListener('change', async (e) => {
@@ -105,24 +123,6 @@
             });
         }
 
-
-        /* Handle Toggle Approved */
-        if(document.querySelector('.data-table')){
-            document.querySelector('.data-table').addEventListener('change', async (e) => {
-                if (e.target.classList.contains('is_approved')) {
-                    e.preventDefault();
-                    const productId = e.target.dataset.productId;
-                    const selectedValue = e.target.value;
-                    const endpoint = `./seller-pending-products/update-approved/${productId}/${selectedValue}`;
-                    const res = await fetch(endpoint);
-                    const data = await res.json();
-                    if(data.status==200){
-                        // toastr.success(data.message);
-                        window.location.reload();
-                    }
-                }
-            });
-        }
 
     });
 

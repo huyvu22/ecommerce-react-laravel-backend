@@ -51,6 +51,9 @@ class OutOfDeliveryOrderDataTable extends DataTable
                     return '<span class="badge badge-danger">Pending</span>';
                 }
             })
+            ->addColumn('amount', function ($query){
+                return format($query->amount);
+            })
             ->rawColumns(['order_status', 'action','payment_status'])
             ->setRowId('id');
     }

@@ -51,6 +51,9 @@ class ProcessedOrderDataTable extends DataTable
                     return '<span class="badge badge-danger">Pending</span>';
                 }
             })
+            ->addColumn('amount', function ($query){
+                return format($query->amount);
+            })
             ->rawColumns(['order_status', 'action','payment_status'])
             ->setRowId('id');
     }
@@ -95,7 +98,7 @@ class ProcessedOrderDataTable extends DataTable
             Column::make('invoice_id'),
             Column::make('customer'),
             Column::make('date'),
-            Column::make('product_quantity'),
+            Column::make('product_quantity')->addClass('text-center'),
             Column::make('amount'),
             Column::make('order_status'),
             Column::make('payment_status'),

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthVendorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\FooterController;
 use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PageController;
@@ -51,6 +52,7 @@ Route::post('seller/register', [AuthVendorController::class, 'register']);
 Route::get('province', [UserAddressController::class, 'getProvince']);
 Route::get('district/{provinceId}', [UserAddressController::class, 'getDistrict']);
 Route::get('ward/{districtId}', [UserAddressController::class, 'getWard']);
+Route::get('seller/profile/{id}', [VendorAddressController::class, 'vendorInfo']);
 
 
 //Protected Route
@@ -144,3 +146,5 @@ Route::get('contact',[PageController::class, 'contact']);
 Route::post('send-contact',[PageController::class, 'postContactForm']);
 Route::get('faqs',[PageController::class, 'faqs']);
 
+/*Route Footer*/
+Route::get('footer',[FooterController::class, 'title']);

@@ -35,15 +35,17 @@ class OrderDataTable extends DataTable
 
             })
             ->addColumn('customer', function ($query){
-                return $query->user->name;
+                return @$query->user->name;
             })
 
             ->addColumn('date', function ($query){
                 return Carbon::parse($query->created_at)->format('d-m-Y');
             })
+            ->addColumn('amount', function ($query){
+                return format($query->amount);
+            })
 
             ->addColumn('order_status', function ($query){
-//                return '<span class="badge badge-info">'.$query->order_status.'</span>';
 
                 if($query->order_status == 'pending' ){
                     return '<span class="badge badge-danger">'.$query->order_status.'</span>';
@@ -106,7 +108,7 @@ class OrderDataTable extends DataTable
             Column::make('invoice_id'),
             Column::make('customer'),
             Column::make('date'),
-            Column::make('product_quantity'),
+            Column::make('product_quantity')->addClass('text-center'),
             Column::make('amount'),
             Column::make('order_status'),
             Column::make('payment_method'),

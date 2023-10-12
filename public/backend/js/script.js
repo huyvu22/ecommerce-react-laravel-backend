@@ -112,7 +112,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 e.preventDefault();
                 const productId = e.target.dataset.productId;
                 const selectedValue = e.target.value;
-                const endpoint = `./seller-pending-products/update-approved/${productId}/${selectedValue}`;
+                const endpoint = `./vendor-pending-products/update-approved/${productId}/${selectedValue}`;
+                console.log(endpoint)
                 const res = await fetch(endpoint);
                 const data = await res.json();
                 if(data.status==200){

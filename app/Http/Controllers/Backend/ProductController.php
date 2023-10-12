@@ -63,15 +63,10 @@ class ProductController extends Controller
         $product->vendor_id = Auth::user()->vendor->id;
         $product->category_id = $request->category;
         $product->sub_category_id = $request->sub_category;
-//        $product->child_category_id = $request->child_category;
-//        $product->brand_id = $request->brand;
         $product->sku = $request->sku;
         $product->price = $request->price;
         $product->offer_price = $request->offer_price;
-//        $product->offer_start_date = $request->offer_start_date;
-//        $product->offer_end_date = $request->offer_end_date;
         $product->quantity = $request->stock_quantity;
-//        $product->video_link = $request->video_link;
         $product->short_description = $request->short_description;
         $product->full_description = $request->full_description;
         $product->product_type = $request->product_type;

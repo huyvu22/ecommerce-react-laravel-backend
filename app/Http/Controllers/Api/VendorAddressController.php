@@ -89,7 +89,7 @@ class VendorAddressController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
@@ -114,5 +114,11 @@ class VendorAddressController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function vendorInfo(string $id)
+    {
+        $vendorInfo = Vendor::find($id);
+        return $this->success($vendorInfo);
     }
 }

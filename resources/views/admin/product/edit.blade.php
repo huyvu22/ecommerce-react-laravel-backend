@@ -78,7 +78,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="">Price</label>
+                                    <label for="">Price ($)</label>
                                     <input type="text" name="price" class="form-control" value="{{$product->price}}">
                                     @if($errors->has('price'))
                                         <span class="text-danger">{{ $errors->first('price') }}</span>
@@ -86,7 +86,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="">Offer Price</label>
+                                    <label for="">Offer Price ($)</label>
                                     <input type="text" name="offer_price" class="form-control" value="{{$product->offer_price}}">
                                     @if($errors->has('offer_price'))
                                         <span class="text-danger">{{ $errors->first('offer_price') }}</span>

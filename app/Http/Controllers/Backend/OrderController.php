@@ -11,6 +11,7 @@ use App\DataTables\PendingOrderDataTable;
 use App\DataTables\ProcessedOrderDataTable;
 use App\DataTables\ShippedOrderDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,11 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        if($order->coupon){
+            $coupon = Coupon::where('code', $order->coupon)->first();
+            $discountValue = $coupon->discount_value;
+            return view('admin.order.show', compact('order', 'discountValue'));
+        }
 
         return view('admin.order.show', compact('order'));
     }
@@ -37,6 +43,7 @@ class OrderController extends Controller
 
         $order->delete();
         toastr('Deleted Successfully');
+        return redirect()->back();
     }
 
     public function pendingOrders(PendingOrderDataTable $dataTable)

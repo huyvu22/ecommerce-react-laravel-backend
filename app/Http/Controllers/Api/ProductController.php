@@ -9,16 +9,28 @@ use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     use \App\Traits\HttpResponses;
+    use \App\Traits\ProductFilterTrait;
 
     public function products()
     {
         return ProductResource::collection(
            Product::where('status', 1)->get()
         );
+    }
+
+    public function vendorProducts($id)
+    {
+        $vendor = Vendor::find($id);
+        $products = Product::where([
+            'status' => 1,
+            'vendor_id' => $vendor->id
+        ])->paginate(9);
+        return ProductResource::collection($products);
     }
 
     public function showProduct(string $id, string $slug)
@@ -33,33 +45,52 @@ class ProductController extends Controller
         $products = Product::where('product_type', 'like', '%' . $type . '%')
             ->where('status', 1);
 
-        if ($request->has('search')) {
-            $products->where('name', 'like', '%' . $request->search . '%');
-        }
 
-        if ($request->has('price-range')) {
-            $priceRange = explode(',', $request->input('price-range'));
+//        if ($request->has('search')) {
+//            $products->where('name', 'like', '%' . $request->search . '%');
+//        }
+//
+//        if ($request->has('price-range')) {
+//            $priceRange = explode(',', $request->input('price-range'));
+//
+//            if (count($priceRange) === 2) {
+//                $minPrice = $priceRange[0];
+//                $maxPrice = $priceRange[1];
+//
+//                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
+//            }
+//        }
+//
+//        if ($request->has('rating')) {
+//            $rating = intval($request->rating);
+//            if ($rating === 0) {
+//                $products->whereDoesntHave('reviews');
+//            }else{
+//                $subquery = DB::table('product_reviews')
+//                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
+//                    ->groupBy('product_id')
+//                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
+//
+//                $products->joinSub($subquery, 'avg_reviews', function ($join) {
+//                    $join->on('products.id', '=', 'avg_reviews.product_id');
+//                });
+//            }
+//        }
+//
+//        if($request->has('price-range') && $request->search){
+//
+//            $priceRange = explode(',', $request->input('price-range'));
+//            $minPrice = $priceRange[0];
+//            $maxPrice = $priceRange[1];
+//
+//            $products->where(function ($query) use ($minPrice, $maxPrice, $request) {
+//                $query->whereBetween('price', [$minPrice, $maxPrice])
+//                    ->where('name', 'like', '%' . $request->search . '%');
+//            });
+//        }
+        $products = $this->filterProducts($products, $request);
 
-            if (count($priceRange) === 2) {
-                $minPrice = $priceRange[0];
-                $maxPrice = $priceRange[1];
-
-                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
-            }
-        }
-        if($request->has('price-range') && $request->search){
-
-            $priceRange = explode(',', $request->input('price-range'));
-            $minPrice = $priceRange[0];
-            $maxPrice = $priceRange[1];
-
-            $products->where(function ($query) use ($minPrice, $maxPrice, $request) {
-                $query->whereBetween('price', [$minPrice, $maxPrice])
-                    ->where('name', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        $products = $products->paginate(8);
+        $products = $products->paginate(9);
 
         return ProductResource::collection($products);
     }
@@ -70,6 +101,10 @@ class ProductController extends Controller
 
         $products = $category->products();
 
+        if($request->currentItem){
+            $products->where('slug', '!=',$request->currentItem);
+        }
+
         if ($request->has('search')) {
             $products->where('name', 'like', '%' . $request->search . '%');
         }
@@ -82,6 +117,21 @@ class ProductController extends Controller
                 $maxPrice = $priceRange[1];
 
                 $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
+            }
+        }
+        if ($request->has('rating')) {
+            $rating = intval($request->rating);
+            if ($rating === 0) {
+                $products->whereDoesntHave('reviews');
+            }else{
+                $subquery = DB::table('product_reviews')
+                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
+                    ->groupBy('product_id')
+                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
+
+                $products->joinSub($subquery, 'avg_reviews', function ($join) {
+                    $join->on('products.id', '=', 'avg_reviews.product_id');
+                });
             }
         }
 
@@ -97,7 +147,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $products->paginate(8);
+        $products = $products->paginate(9);
         return ProductResource::collection($products);
     }
 
@@ -107,6 +157,10 @@ class ProductController extends Controller
 
         $products = $subCategory->products();
 
+        if($request->currentItem){
+            $products->where('slug', '!=',$request->currentItem);
+        }
+
         if ($request->has('search')) {
             $products->where('name', 'like', '%' . $request->search . '%');
         }
@@ -132,45 +186,29 @@ class ProductController extends Controller
             });
         }
 
-        $products = $products->paginate(8);
+        if ($request->has('rating')) {
+            $rating = intval($request->rating);
+            if ($rating === 0) {
+                $products->whereDoesntHave('reviews');
+            }else{
+                $subquery = DB::table('product_reviews')
+                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
+                    ->groupBy('product_id')
+                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
+
+                $products->joinSub($subquery, 'avg_reviews', function ($join) {
+                    $join->on('products.id', '=', 'avg_reviews.product_id');
+                });
+            }
+        }
+
+        $products = $products->paginate(9);
         return ProductResource::collection($products);
 
-//        $subCategory = SubCategory::with('products')->where('slug', $slug)->first();
-//
-//        $productsQuery = $subCategory->products();
-//
-//        if ($keyword !== null) {
-//            $productsQuery->where('name', 'like', '%' . $keyword . '%');
-//        }
-//
-//        // Get max and min values
-//        $maxPrice = $productsQuery->max('price');
-//        $minPrice = $productsQuery->min('price');
-//
-//        // Paginate products
-//        $products = $productsQuery->paginate(8);
-//
-//        // Create a data array that includes max and min values
-//        $data = [
-//            'maxPrice' => $maxPrice,
-//            'minPrice' => $minPrice,
-//            'products' => $products,
-//        ];
-//
-//        return ProductResource::collection($data);
     }
 
-    public function vendorProducts($id)
-    {
-        $vendor = Vendor::find($id);
-        $products = Product::where([
-            'status' => 1,
-            'vendor_id' => $vendor->id
-        ])->paginate(9);
-        return ProductResource::collection($products);
-    }
 
-    public function searchProduct($keyword)
+    public function searchProduct(Request $request, $keyword)
     {
         $products = Product::where('status', 1)
             ->where(function ($query) use ($keyword) {
@@ -180,19 +218,47 @@ class ProductController extends Controller
                         $query->where('name', 'like', '%' . $keyword . '%');
                     })
                     ->orWhereHas('subCategory', function ($query) use ($keyword) {
-                    $query->where('name', 'like', '%' . $keyword . '%');
-                })
-                ;
-            })
-            ->paginate(8);
+                        $query->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
+
+        if ($request->has('price-range')) {
+            $priceRange = explode(',', $request->input('price-range'));
+
+            if (count($priceRange) === 2) {
+                $minPrice = $priceRange[0];
+                $maxPrice = $priceRange[1];
+
+                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
+            }
+        }
+        if ($request->has('rating')) {
+            $rating = intval($request->rating);
+            if ($rating === 0) {
+                $products->whereDoesntHave('reviews');
+            }else{
+                $subquery = DB::table('product_reviews')
+                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
+                    ->groupBy('product_id')
+                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
+
+                $products->joinSub($subquery, 'avg_reviews', function ($join) {
+                    $join->on('products.id', '=', 'avg_reviews.product_id');
+                });
+            }
+        }
+
+        $products = $products->paginate(9);
+
         return ProductResource::collection($products);
     }
+
 
     public function filterPrice($min, $max)
     {
         $products = Product::where('status',1)
             ->whereBetween('price', [$min, $max])
-            ->paginate(8);
+            ->paginate(9);
         return ProductResource::collection($products);
     }
 }

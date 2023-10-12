@@ -94,7 +94,7 @@ class AdminReviewDataTable extends DataTable
             Column::make('id'),
             Column::make('product'),
             Column::make('rating'),
-            Column::make('review'),
+            Column::make('review') ->width(400),
             Column::make('username'),
             Column::make('vendor'),
             Column::make('status'),

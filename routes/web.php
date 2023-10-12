@@ -30,6 +30,7 @@ use App\Http\Controllers\Backend\TermsAndConditionController;
 use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\VendorController;
 use App\Http\Controllers\Backend\VendorListController;
+use App\Http\Controllers\Backend\VendorProductController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\ProfileController;
@@ -183,6 +184,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     /* Vendor list Route*/
     Route::get('vendors',[VendorListController::class,'index'])->name('vendors.index');
     Route::put('vendors/{vendor}',[VendorListController::class,'updateStatus'])->name('vendors.update-status');
+
+    /* Vendor Product Route*/
+    Route::get('vendor-products',[VendorProductController::class,'index'])->name('vendor-products.index');
+    Route::get('vendor-pending-products/update-approved/{productId}/{approved}', [VendorProductController::class,'updateApprove'])->name('vendor-pending-products.updateApprove');
+    Route::get('vendor-pending-products', [VendorProductController::class,'pending'])->name('vendor-pending-products.index');
+
+
 
     /* Manage User Route*/
     Route::get('manage-user',[ManageUserController::class,'index'])->name('manage-user.index');
