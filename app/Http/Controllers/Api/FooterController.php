@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FooterResource;
 use App\Models\FooterColumnThree;
 use App\Models\FooterColumnTwo;
 use App\Models\FooterInfo;
 use App\Models\FooterTitle;
-use Illuminate\Http\Request;
 
 class FooterController extends Controller
 {
@@ -29,7 +27,6 @@ class FooterController extends Controller
                     'links' => FooterColumnThree::all()
                 ]
             ]
-
         ];
         return $this->success($data);
     }

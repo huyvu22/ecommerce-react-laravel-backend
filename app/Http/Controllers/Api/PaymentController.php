@@ -149,8 +149,6 @@ class PaymentController extends Controller
         } else {
             return $this->error('','Payment Cancel', 404);
         }
-
-
     }
 
     public function paypalPaymentSuccess(Request $request)
@@ -185,13 +183,15 @@ class PaymentController extends Controller
     /* Pay with VnPay*/
     public function connectVnPayPayment(Request $request)
     {
+
+        $vnPaySetting = \App\Models\VnPaySetting::first();
         error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $totalPay = $request->total;
 
-        $vnp_TmnCode = "BZU9ONFY";
-        $vnp_HashSecret = "MCXMMMPVHKTACIAGMMBQDNQRCGUKRBYK";
+        $vnp_TmnCode = $vnPaySetting->client_id;
+        $vnp_HashSecret = $vnPaySetting->secret_key;
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = 'http://localhost:3000/payment/vnpay/success';
         $startTime = date("YmdHis");
@@ -277,7 +277,7 @@ class PaymentController extends Controller
         $totalPay = round(json_decode($data['amount'], true) * $paypalSetting->currency_rate, 2);
 
         //storeOrder in Database
-        $this->storeOrder($data,$data['order_method'],1, $totalPay);
+        $this->storeOrder($data,$data['order_method'],$data['payment_status'], $totalPay);
 
         return $this->success(($shoppingCart), 'send cart to server successful', );
     }

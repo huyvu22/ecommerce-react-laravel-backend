@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function category()
     {
         return CategoryResource::collection(
-            Category::where('status', 1)->get()
+            Category::all()
         );
     }
 }

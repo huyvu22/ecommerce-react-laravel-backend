@@ -37,7 +37,6 @@ class AdminController extends Controller
 
         $yearEarnings = Order::whereYear('created_at',Carbon::now()->year)->where('order_status','!=', 'canceled')->where('payment_status', 1)->sum('sub_total');
 
-
         $totalReviews = ProductReview::count();
 
         $totalProducts = Product::count();

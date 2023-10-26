@@ -25,7 +25,7 @@ class ProductReviewController extends Controller
         $request->validate([
             'product_id' => 'required',
             'rating' => 'required',
-            'review' => 'required',
+            'review' => 'required'
         ]);
 
         $vendor = Product::with('vendor')->find($request->product_id)->vendor->first();

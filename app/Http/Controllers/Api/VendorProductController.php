@@ -90,10 +90,6 @@ class VendorProductController extends Controller
             'status' => $request->status,
         ];
 
-//        if ($foundProduct  && $request->image === null ){
-//            $productData['thumb_image'] = $foundProduct->thumb_image;
-//        }
-
         $product = Product::updateOrCreate(['id' => $request->product_id], $productData);
         return $this->success($product, 'Product Saved Successfully');
     }

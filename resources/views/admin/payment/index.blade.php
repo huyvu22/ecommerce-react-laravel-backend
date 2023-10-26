@@ -15,6 +15,7 @@
                                 <div class="col-2">
                                     <div class="list-group" id="list-tab" role="tablist">
                                         <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab">Paypal</a>
+                                        <a class="list-group-item list-group-item-action" id="list-vnpay-list" data-toggle="list" href="#list-vnpay" role="tab">VnPay</a>
                                         <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab">COD</a>
                                     </div>
                                 </div>
@@ -22,6 +23,8 @@
                                     <div class="tab-content" id="nav-tabContent">
 
                                         @include('admin.payment.sections.paypal-setting')
+
+                                        @include('admin.payment.sections.vnpay-setting')
 
                                         @include('admin.payment.sections.cod-setting')
 

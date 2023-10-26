@@ -45,49 +45,6 @@ class ProductController extends Controller
         $products = Product::where('product_type', 'like', '%' . $type . '%')
             ->where('status', 1);
 
-
-//        if ($request->has('search')) {
-//            $products->where('name', 'like', '%' . $request->search . '%');
-//        }
-//
-//        if ($request->has('price-range')) {
-//            $priceRange = explode(',', $request->input('price-range'));
-//
-//            if (count($priceRange) === 2) {
-//                $minPrice = $priceRange[0];
-//                $maxPrice = $priceRange[1];
-//
-//                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
-//            }
-//        }
-//
-//        if ($request->has('rating')) {
-//            $rating = intval($request->rating);
-//            if ($rating === 0) {
-//                $products->whereDoesntHave('reviews');
-//            }else{
-//                $subquery = DB::table('product_reviews')
-//                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
-//                    ->groupBy('product_id')
-//                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
-//
-//                $products->joinSub($subquery, 'avg_reviews', function ($join) {
-//                    $join->on('products.id', '=', 'avg_reviews.product_id');
-//                });
-//            }
-//        }
-//
-//        if($request->has('price-range') && $request->search){
-//
-//            $priceRange = explode(',', $request->input('price-range'));
-//            $minPrice = $priceRange[0];
-//            $maxPrice = $priceRange[1];
-//
-//            $products->where(function ($query) use ($minPrice, $maxPrice, $request) {
-//                $query->whereBetween('price', [$minPrice, $maxPrice])
-//                    ->where('name', 'like', '%' . $request->search . '%');
-//            });
-//        }
         $products = $this->filterProducts($products, $request);
 
         $products = $products->paginate(9);
@@ -105,47 +62,7 @@ class ProductController extends Controller
             $products->where('slug', '!=',$request->currentItem);
         }
 
-        if ($request->has('search')) {
-            $products->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->has('price-range')) {
-            $priceRange = explode(',', $request->input('price-range'));
-
-            if (count($priceRange) === 2) {
-                $minPrice = $priceRange[0];
-                $maxPrice = $priceRange[1];
-
-                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
-            }
-        }
-        if ($request->has('rating')) {
-            $rating = intval($request->rating);
-            if ($rating === 0) {
-                $products->whereDoesntHave('reviews');
-            }else{
-                $subquery = DB::table('product_reviews')
-                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
-                    ->groupBy('product_id')
-                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
-
-                $products->joinSub($subquery, 'avg_reviews', function ($join) {
-                    $join->on('products.id', '=', 'avg_reviews.product_id');
-                });
-            }
-        }
-
-        if($request->has('price-range') && $request->search){
-
-            $priceRange = explode(',', $request->input('price-range'));
-            $minPrice = $priceRange[0];
-            $maxPrice = $priceRange[1];
-
-            $products->where(function ($query) use ($minPrice, $maxPrice, $request) {
-                $query->whereBetween('price', [$minPrice, $maxPrice])
-                    ->where('name', 'like', '%' . $request->search . '%');
-            });
-        }
+        $products = $this->filterProducts($products, $request);
 
         $products = $products->paginate(9);
         return ProductResource::collection($products);
@@ -161,46 +78,7 @@ class ProductController extends Controller
             $products->where('slug', '!=',$request->currentItem);
         }
 
-        if ($request->has('search')) {
-            $products->where('name', 'like', '%' . $request->search . '%');
-        }
-        if ($request->has('price-range')) {
-            $priceRange = explode(',', $request->input('price-range'));
-
-            if (count($priceRange) === 2) {
-                $minPrice = $priceRange[0];
-                $maxPrice = $priceRange[1];
-
-                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
-            }
-        }
-        if($request->has('price-range') && $request->search){
-
-            $priceRange = explode(',', $request->input('price-range'));
-            $minPrice = $priceRange[0];
-            $maxPrice = $priceRange[1];
-
-            $products->where(function ($query) use ($minPrice, $maxPrice, $request) {
-                $query->whereBetween('price', [$minPrice, $maxPrice])
-                    ->where('name', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        if ($request->has('rating')) {
-            $rating = intval($request->rating);
-            if ($rating === 0) {
-                $products->whereDoesntHave('reviews');
-            }else{
-                $subquery = DB::table('product_reviews')
-                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
-                    ->groupBy('product_id')
-                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
-
-                $products->joinSub($subquery, 'avg_reviews', function ($join) {
-                    $join->on('products.id', '=', 'avg_reviews.product_id');
-                });
-            }
-        }
+        $products = $this->filterProducts($products, $request);
 
         $products = $products->paginate(9);
         return ProductResource::collection($products);
@@ -222,31 +100,7 @@ class ProductController extends Controller
                     });
             });
 
-        if ($request->has('price-range')) {
-            $priceRange = explode(',', $request->input('price-range'));
-
-            if (count($priceRange) === 2) {
-                $minPrice = $priceRange[0];
-                $maxPrice = $priceRange[1];
-
-                $products->whereBetween('offer_price', [$minPrice, $maxPrice]);
-            }
-        }
-        if ($request->has('rating')) {
-            $rating = intval($request->rating);
-            if ($rating === 0) {
-                $products->whereDoesntHave('reviews');
-            }else{
-                $subquery = DB::table('product_reviews')
-                    ->select('product_id', DB::raw('avg(rating) as avg_rating'))
-                    ->groupBy('product_id')
-                    ->havingRaw('ROUND(avg_rating) = ?', [$rating]);
-
-                $products->joinSub($subquery, 'avg_reviews', function ($join) {
-                    $join->on('products.id', '=', 'avg_reviews.product_id');
-                });
-            }
-        }
+        $products = $this->filterProducts($products, $request);
 
         $products = $products->paginate(9);
 

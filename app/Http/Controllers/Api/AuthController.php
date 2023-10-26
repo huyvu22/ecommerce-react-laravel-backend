@@ -20,7 +20,6 @@ class AuthController extends Controller
 
     public function register(StoreUserRequest $request)
     {
-//        $request->validated($request->all());
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -101,13 +100,11 @@ class AuthController extends Controller
         }
     }
 
-
     public function logout()
     {
         Auth::user()->currentAccessToken()->delete();
         return $this->success('','Logged out successfully');
     }
-
 
     public function checkTokenLogin(Request $request)
     {
@@ -131,8 +128,6 @@ class AuthController extends Controller
                return response()->json(['valid' => false], 401);
            }
        }
-
-
     }
 
     public function changePassword(Request $request)
@@ -152,6 +147,5 @@ class AuthController extends Controller
         ]);
 
         return $this->success('Password changed successfully',200 );
-
     }
 }

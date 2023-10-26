@@ -58,9 +58,7 @@ class NewsletterController extends Controller
             Mail::to($subscriber->email)->send(new SubscriptionVerification($subscriber));
 
             return $this->success($existSubscriber,'Check your email to activate newsletter');
-
         }
-
     }
 
     public function newsLetterEmailVerify($token)
@@ -75,7 +73,7 @@ class NewsletterController extends Controller
         }else {
              abort(404);
         }
-        toastr('Subscription successfully');
+
         return redirect()->to('http://localhost:3000/');
     }
 }

@@ -12,7 +12,7 @@ class OrderController extends Controller
 {
     public function orders()
     {
-        $orders = Order::with('orderProducts')->where('user_id', Auth::user()->id)->get();
+        $orders = Order::with('orderProducts')->where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
         return OrderResource::collection($orders);
     }
 
@@ -21,16 +21,4 @@ class OrderController extends Controller
         $order = Order::with('orderProducts')->where('user_id', Auth::user()->id)->where('invoice_id',$orderId)->get();
         return OrderResource::collection($order);
     }
-
-//    public function vendorOrderDetail($orderId)
-//    {
-//        $order = Order::with('orderProducts')->where('invoice_id',$orderId)->get();
-//        return OrderResource::collection($order);
-//    }
-//
-//    public function vendorOrderShortBy($orderId,$status)
-//    {
-//        $order = Order::with('orderProducts')->where(['invoice_id'=>$orderId, 'order_status'=> $status])->get();
-//        return OrderResource::collection($order);
-//    }
 }

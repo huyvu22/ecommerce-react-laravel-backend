@@ -39,5 +39,4 @@ class CouponController extends Controller
             'coupon' => new CouponResource($coupon),
         ]);
     }
-
 }

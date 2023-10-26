@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AuthVendorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CouponController;
-use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\ExchangeRatesController;
 use App\Http\Controllers\Api\FooterController;
 use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\OrderController;
@@ -109,12 +109,15 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     });
 
     /*Product Review Route*/
-    Route::get('product-review/{productId}',[ProductReviewController::class, 'showReview']);
     Route::post('product-review',[ProductReviewController::class, 'store']);
 
     /*WishList Route*/
     Route::resource( 'wishlist',WishListController::class);
 });
+
+/*Product Review Route*/
+Route::get('product-review/{productId}',[ProductReviewController::class, 'showReview']);
+
 
 
 Route::get('sliders',[SliderController::class,'sliders']);
@@ -145,6 +148,7 @@ Route::get('privacy-policy',[PageController::class, 'privacyPolicy']);
 Route::get('contact',[PageController::class, 'contact']);
 Route::post('send-contact',[PageController::class, 'postContactForm']);
 Route::get('faqs',[PageController::class, 'faqs']);
+Route::get('currency_rate',[ExchangeRatesController::class, 'index']);
 
 /*Route Footer*/
 Route::get('footer',[FooterController::class, 'title']);

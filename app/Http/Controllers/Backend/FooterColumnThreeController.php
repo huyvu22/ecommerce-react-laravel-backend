@@ -34,7 +34,7 @@ class FooterColumnThreeController extends Controller
     {
         $request->validate([
             'name' => 'required|max:200',
-            'url' => 'required|url',
+            'url' => 'required',
             'status' => 'required',
         ]);
 
@@ -73,7 +73,7 @@ class FooterColumnThreeController extends Controller
         if (!$request->has('switch_status')) {
             $request->validate([
                 'name' => 'required|max:200' . $footerColumn3->id,
-                'url' => 'required|url',
+                'url' => 'required',
                 'status' => 'required',
             ]);
         }

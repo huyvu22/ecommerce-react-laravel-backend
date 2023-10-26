@@ -40,6 +40,5 @@ class AuthVendorController extends Controller
             'user' => $vendor,
             'token' => $user->createToken('API Token of '.$user->name)->plainTextToken,
         ]);
-
     }
 }

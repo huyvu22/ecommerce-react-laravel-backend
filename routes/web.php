@@ -31,6 +31,7 @@ use App\Http\Controllers\Backend\TransactionController;
 use App\Http\Controllers\Backend\VendorController;
 use App\Http\Controllers\Backend\VendorListController;
 use App\Http\Controllers\Backend\VendorProductController;
+use App\Http\Controllers\Backend\VnPaySettingController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\ProfileController;
@@ -100,6 +101,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     /* All Payments Route*/
     Route::get('payment-settings',[PaymentSettingController::class,'index'])->name('payment-settings.index');
     Route::put('paypal-setting/{id}',[PaypalSettingController::class,'update'])->name('paypal-setting.update');
+    Route::put('vnpay-setting/{id}',[VnPaySettingController::class,'update'])->name('vnpay-setting.update');
     Route::put('cod/{id}',[CodSettingController::class,'update'])->name('cod-setting.update');
 
     /* Get Status Order Route*/
@@ -189,9 +191,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('vendor-products',[VendorProductController::class,'index'])->name('vendor-products.index');
     Route::get('vendor-pending-products/update-approved/{productId}/{approved}', [VendorProductController::class,'updateApprove'])->name('vendor-pending-products.updateApprove');
     Route::get('vendor-pending-products', [VendorProductController::class,'pending'])->name('vendor-pending-products.index');
-
-
-
+    
     /* Manage User Route*/
     Route::get('manage-user',[ManageUserController::class,'index'])->name('manage-user.index');
     Route::post('manage-user',[ManageUserController::class,'create'])->name('manage-user.create');
@@ -199,9 +199,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
 });
 
+Route::get('newsletter-verify/{token}',[NewsletterController::class, 'newsLetterEmailVerify'])->name('newsletter-verify');
 
 
 
-//Route::prefix('vendor')->name('vendor.')->middleware(['auth', 'role:vendor'])->group(function () {
-//    Route::get('dashboard', [VendorController::class, 'dashboard'])->name('dashboard');
-//});
+

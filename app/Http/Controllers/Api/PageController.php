@@ -40,7 +40,6 @@ class PageController extends Controller
         return  $this->success($contact);
     }
 
-
     public function postContactForm(Request $request)
     {
         $validator = Validator::make($request->all(), [
