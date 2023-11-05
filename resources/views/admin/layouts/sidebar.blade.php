@@ -22,7 +22,6 @@
                 <ul class="dropdown-menu">
                     <li class="{{setActive(['admin.category.*'])}}"><a class="nav-link" href="{{route('admin.category.index')}}">Category</a></li>
                     <li class="{{setActive(['admin.sub-category.*'])}}"><a class="nav-link" href="{{route('admin.sub-category.index')}}">Sub Category</a></li>
-{{--                    <li class="{{setActive(['admin.child-category.*'])}}"><a class="nav-link" href="">Child Category</a></li>--}}
                 </ul>
             </li>
 
@@ -87,6 +86,14 @@
                 </ul>
             </li>
 
+            <li class="dropdown {{setActive(['admin.withdraw-method.*', 'admin.withdraw-list.*'])}}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fa fa-money-bill"></i> <span>Withdraw Payment</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{setActive(['admin.withdraw-method.*'])}}"><a class="nav-link" href="{{route('admin.withdraw-method.index')}}">Withdraw Method</a></li>
+                    <li class="{{setActive(['admin.withdraw-list.*'])}}"><a class="nav-link" href="{{route('admin.withdraw-list.index')}}">Withdraw Request</a></li>
+                </ul>
+            </li>
+
             <li class="menu-header">Settings & More</li>
 
             <li class="dropdown {{setActive(['admin.footer-info.*','admin.footer-socials.*','admin.footer-column-2.*','admin.footer-column-3.*'])}}">
@@ -108,6 +115,7 @@
 
                 </ul>
             </li>
+
 
             <li class="{{setActive(['admin.subscriber.*'])}}"><a class="nav-link" href="{{route('admin.subscriber.index')}}"><i class="fas fa-user"></i> Subscribers</a></li>
             <li class="{{setActive(['admin.setting.*'])}}"><a class="nav-link" href="{{route('admin.setting.index')}}"><i class="fas fa-cog"></i> Settings</a></li>

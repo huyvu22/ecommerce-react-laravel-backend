@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\VendorAddressController;
 use App\Http\Controllers\Api\VendorOrderedProductController;
 use App\Http\Controllers\Api\VendorProductController;
+use App\Http\Controllers\Api\VendorWithdraw;
 use App\Http\Controllers\Api\WishListController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -93,11 +94,6 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::get('orders',[OrderController::class, 'orders']);
     Route::get('orders/detail/{orderId}',[OrderController::class, 'orderDetail']);
 
-//    Route::prefix('seller/orders')->group(function () {
-//        Route::get('/detail/{orderId}',[OrderController::class, 'vendorOrderDetail']);
-//        Route::get('/{orderId}/status',[OrderController::class, 'vendorOrderShortBy']);
-//    });
-
 
     /*Vendor Product Route*/
     Route::prefix('seller')->group(function () {
@@ -106,6 +102,12 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
         Route::get('orders/detail/{orderId}',[VendorOrderedProductController::class, 'orderDetail']);
         Route::get('orders/{status}',[VendorOrderedProductController::class, 'orderShortBy']);
         Route::post('set-order-status/{orderId}/{status}',[VendorOrderedProductController::class, 'setOrderStatus']);
+
+        // Vendor Withdraw
+        Route::get('/withdraw/method',[VendorWithdraw::class, 'method']);
+        Route::get('/withdraw/balance',[VendorWithdraw::class, 'index']);
+        Route::post('/withdraw/request',[VendorWithdraw::class, 'store']);
+
     });
 
     /*Product Review Route*/

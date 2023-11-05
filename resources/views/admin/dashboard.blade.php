@@ -155,7 +155,7 @@
                             <h4>Year's Earning</h4>
                         </div>
                         <div class="card-body">
-                            {{format($monthEarnings)}}
+                            {{format($yearEarnings)}}
                         </div>
                     </div>
                 </div>

@@ -18,9 +18,7 @@ class PaymentSettingController extends Controller
         $codSetting = CodSetting::first();
 
         $client = new Client();
-
         $apiKey = 'EVql9dBo0Wj2bDny3JfNGGeBq8IlULmY';
-
         $response = $client->get('https://api.apilayer.com/exchangerates_data/latest?base=USD', [
             'query' => ['apikey' => $apiKey],
         ]);

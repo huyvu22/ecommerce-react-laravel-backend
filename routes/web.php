@@ -32,6 +32,8 @@ use App\Http\Controllers\Backend\VendorController;
 use App\Http\Controllers\Backend\VendorListController;
 use App\Http\Controllers\Backend\VendorProductController;
 use App\Http\Controllers\Backend\VnPaySettingController;
+use App\Http\Controllers\Backend\WithdrawController;
+use App\Http\Controllers\Backend\WithdrawMethodController;
 use Illuminate\Support\Facades\Route;
 
 //use App\Http\Controllers\ProfileController;
@@ -161,6 +163,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::delete('subscriber/destroy/{id}',[SubscribeController::class,'destroy'])->name('subscriber.destroy');
     Route::post('subscriber-send-mail',[SubscribeController::class,'sendMail'])->name('subscriber-send-mail');
 
+    /* Withdraw Route*/
+    Route::resource('withdraw-method', WithdrawMethodController::class);
+    Route::get('withdraw-list', [WithdrawController::class, 'index'])->name('withdraw-list.index');
+    Route::get('withdraw-list/{withdrawRequest}', [WithdrawController::class, 'show'])->name('withdraw-list.show');
+    Route::get('withdraw-list/{id}/{status}', [WithdrawController::class, 'update'])->name('withdraw-list.update');
+
 
     /* Footer Route*/
     Route::resource('footer-info',FooterInfoController::class);
@@ -191,7 +199,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('vendor-products',[VendorProductController::class,'index'])->name('vendor-products.index');
     Route::get('vendor-pending-products/update-approved/{productId}/{approved}', [VendorProductController::class,'updateApprove'])->name('vendor-pending-products.updateApprove');
     Route::get('vendor-pending-products', [VendorProductController::class,'pending'])->name('vendor-pending-products.index');
-    
+
     /* Manage User Route*/
     Route::get('manage-user',[ManageUserController::class,'index'])->name('manage-user.index');
     Route::post('manage-user',[ManageUserController::class,'create'])->name('manage-user.create');
